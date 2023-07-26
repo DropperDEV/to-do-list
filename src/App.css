@@ -14,9 +14,11 @@ body {
   align-items: center;
   border: 0.01rem solid #b4afaf;
 }
-
+.main:last-child{
+  justify-content: end;
+}
 .title-wrapper {
-  height: 4rem;
+  height: 7rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -28,26 +30,39 @@ body {
 
   padding: 0.6rem;
 }
-
-.input-text {
+.inputText-form {
   width: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin-bottom: 0.5rem;
+}
+.input-text {
+  width: 100%;
+
   font-size: 0.8rem;
   padding: 0.35rem;
-
 }
 
-.input-text:focus{
+.input-text:focus {
   outline: none;
   border: 1px solid blue;
 }
 
 .wrapper-checkbox {
-  width: 90%;
+  width: 95%;
   display: grid;
-  margin-right: 1.3rem;
+  max-height: 10rem; /* Set a maximum height for the container */
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-bottom: 4px;
 }
-
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
 .checkbox {
   border-bottom: 1px solid #c3c9c5;
   font-size: 0.8rem;
@@ -56,7 +71,7 @@ body {
   padding: 0.2rem;
   gap: 0.2rem;
   margin-bottom: 0.35rem;
-
+  width: 100%;
   align-items: center;
 }
 
@@ -65,17 +80,18 @@ body {
   margin-bottom: 0.1rem;
 }
 
-.checkbox input{
+.checkbox input {
   width: 0.7rem;
   height: 0.7rem;
-  border: 1px solid #ddd;
-  border-radius: 30%;
+}
 
+.selected {
+  text-decoration-line: line-through;
 }
 
 .footer {
   width: 22rem;
-  height: 10rem;
+  min-height: 20%;
   display: grid;
   grid-template-columns: 35% 35%;
   gap: 5rem;
@@ -84,7 +100,7 @@ body {
   background-color: #dbffdf;
 }
 
-.footer-element:first-child{
+.footer-element:first-child {
   margin-left: 0.2rem;
 }
 .footer-element {
