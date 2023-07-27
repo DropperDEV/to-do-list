@@ -1,19 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import "./App.css";
 
 export default function App() {
   const [toDos, setToDo] = useState([]);
+  const [sortedToDo, setSortedToDo] = useState(toDos);
   function handleAddItems(newToDo) {
     setToDo((toDos) => [...toDos, newToDo]);
+    setSortedToDo((prevSortedToDos) => [...prevSortedToDos, newToDo]);
   }
 
   return (
     <div className="main">
       <Title>THINGS TO DO </Title>
       <InputText onAddItems={handleAddItems} />
-      <ListToDo toDos={toDos} onToDo={setToDo} />
-      <Footer />
+      <ListToDo
+        toDos={toDos}
+        onToDo={setToDo}
+        sortedToDo={sortedToDo}
+        onSortedToDo={setSortedToDo}
+      />
+      <Footer
+        toDos={toDos}
+        onToDo={setToDo}
+        sortedToDo={sortedToDo}
+        onSortedToDo={setSortedToDo}
+      />
     </div>
   );
 }
@@ -47,10 +59,10 @@ function InputText({ onAddItems }) {
   );
 }
 
-function ListToDo({ toDos, onToDo }) {
+function ListToDo({ onToDo, sortedToDo }) {
   return (
     <div className="wrapper-checkbox">
-      {toDos.map((todo) => (
+      {sortedToDo.map((todo) => (
         <ToDo Todo={todo} key={todo.id} onToDo={onToDo} />
       ))}
     </div>
@@ -59,37 +71,73 @@ function ListToDo({ toDos, onToDo }) {
 
 function ToDo({ Todo, onToDo }) {
   function handleToggleClick() {
-    const updatedTodo = { ...Todo, state: 1 };
-    onToDo(updatedTodo);
+    const updatedTodo = { ...Todo, state: !Todo.state };
+    onToDo((prevToDos) =>
+      prevToDos.map((todo) => (todo.id === updatedTodo.id ? updatedTodo : todo))
+    );
   }
+
   return (
-    <div className={Todo.state ? "checkbox selected" : "checkbox"}>
+    <div className={`checkbox ${Todo.state && "selected"}`}>
       <input
         type="checkbox"
         checked={Todo.state}
-        onChange={handleToggleClick}
+        onChange={() => handleToggleClick()}
       />
       <h2>{Todo.name}</h2>
     </div>
   );
 }
 
-function Footer() {
+function Footer({ toDos, onSortedToDo }) {
+  const [sortBy, setSortBy] = useState("all");
+  const itemsLeft = toDos.filter((todo) => !todo.state).length;
+
+  
+
+  useEffect(() => {
+    if (sortBy === "all") {
+      onSortedToDo(toDos);
+    } else if (sortBy === "completed") {
+      onSortedToDo([...toDos].sort((a, b) => b.state - a.state));
+    } else if (sortBy === "active") {
+      onSortedToDo([...toDos].sort((a, b) => a.state - b.state));
+    }
+  }, [sortBy, toDos, onSortedToDo]);
+
   return (
     <div className="footer">
       <BottomOptions>
         <span>➕</span>
-        <span>🔍</span> <p>3 items left</p>
+        <span>🔍</span> <p>{itemsLeft} items left</p>
       </BottomOptions>
       <BottomOptions>
-        <p>All</p>
-        <p>Active</p>
-        <p>Completed</p>
+        <Button value={"all"} onSortBy={setSortBy}>
+          All
+        </Button>
+        <Button value={"active"} onSortBy={setSortBy}>
+          Active
+        </Button>
+        <Button value={"completed"} onSortBy={setSortBy}>
+          Completed
+        </Button>
       </BottomOptions>
     </div>
   );
 }
 
 function BottomOptions({ children }) {
-  return <div className="footer-element">{children}</div>;
+  return <div className="footer-element button">{children}</div>;
+}
+
+function Button({ value, children, onSortBy }) {
+  return (
+    <button
+      value={value}
+      className="button"
+      onClick={(e) => onSortBy(e.target.value)}
+    >
+      {children}
+    </button>
+  );
 }

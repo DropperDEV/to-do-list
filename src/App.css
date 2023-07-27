@@ -83,6 +83,7 @@ body {
 .checkbox input {
   width: 0.7rem;
   height: 0.7rem;
+
 }
 
 .selected {
@@ -109,4 +110,12 @@ body {
   justify-content: center;
   align-items: center;
   gap: 0.4rem;
+}
+
+.button{
+  
+	background: none repeat scroll 0 0 transparent;
+	border: medium none;
+	border-spacing: 0;
+
 }
